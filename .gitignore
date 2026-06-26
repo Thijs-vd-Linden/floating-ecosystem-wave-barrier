@@ -1,0 +1,11 @@
+# Generated output — created by the scripts themselves, not tracked
+results/jld2/
+results/plots/
+results/vtk/
+
+# Julia environment
+Manifest.toml
+
+# OS / editor
+.DS_Store
+.vscode/
