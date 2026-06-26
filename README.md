@@ -31,7 +31,7 @@ test case used there.
 
 ## Requirements
 
-- Julia (developed and tested with the version pinned in `Manifest.toml`)
+- Julia 1.12 (developed and tested with 1.12.5)
 - A working Gmsh installation, via `GridapGmsh.jl`
 
 From the repository root:
