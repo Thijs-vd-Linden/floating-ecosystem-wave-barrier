@@ -67,7 +67,7 @@ end
 # 1. COMBINED SPATIAL PLOT: |κ|, |κ_r|, |κ_in| vs x/LΩ
 #    κ split at pipe waterline gap, pipe location shown as shaded region
 # ─────────────────────────────────────────────────────────────────────────────
-function plot_kappa_eta_case3(κh, reg, params)
+function plot_kappa_eta_case3(κh, reg, params, ξ)
     (; η₀, LΩ, k, xdᵢₙ, xdₒᵤₜ, xc, xpL, xpR) = params
 
     x_fs, κ_vals = extract_kappa_case3(κh, reg)
@@ -77,6 +77,11 @@ function plot_kappa_eta_case3(κh, reg, params)
     κ_abs    = abs.(κ_vals)    ./ η₀
     κ_r_abs  = abs.(κ_r_vals)  ./ η₀
     κ_in_abs = abs.(κ_in_vals) ./ η₀
+
+    # Pipe heave motion, reported as a single marker at the pipe centre,
+    # since the rigid body has no spatial deflection profile to plot —
+    # only the overall heave/pitch response
+    η_p_heave = abs(ξ[1]) / η₀
 
     mask_left  = x_fs .< xpL
     mask_right = x_fs .> xpR
@@ -116,6 +121,8 @@ function plot_kappa_eta_case3(κh, reg, params)
     plot!(p2, x_fs[small_mask_left]  ./ LΩ, κ_in_abs[small_mask_left], label="Incident wave", lw=1.0, color=:gray, ls=:dot)
     vline!(p2, [xc / LΩ], color=:black, ls=:dot, lw=0.8, label="Pipe centre")
     vspan!(p2, [xpL/LΩ, xpR/LΩ], alpha=0.15, color=:red, label="Pipe waterline gap")
+    scatter!(p2, [xc / LΩ], [η_p_heave],
+            label=L"Pipe heave $|\xi_1|/\eta_0$", color=:red, ms=6, markerstrokewidth=0.5, markerstrokecolor=:black)
 
     display(p2)
     savefig(p2, joinpath(plot_dir, "case3_kappa_eta_spatial_inner.png"))
@@ -187,7 +194,7 @@ function print_rigid_body_dofs(ξ, params)
 end
 
 # ─── Run single-frequency plots ───────────────────────────────────────────────
-plot_kappa_eta_case3(κh3, reg3, params3)
+plot_kappa_eta_case3(κh3, reg3, params3, ξ)
 plot_kappa_free_surface_case3(κh3, reg3, params3)
 plot_kappa_re_im_case3(κh3, reg3, params3)
 print_rigid_body_dofs(ξ, params3)
